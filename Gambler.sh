@@ -5,6 +5,7 @@ declare -A winArray
 declare -A lossArray
 TOTAL_DAYS=20;
 MONTHLY_STAKE=2000;
+totalAmount=0;
 function gamble(){
 	read -p "Enter the betting limit for the day: " limit
 	winLimit=$(( $STAKE+$limit ))
@@ -54,8 +55,6 @@ function daysWonOrLost(){
 		echo $element "-  Lost by " ${lossArray[$element]} "dollars"
 	done
 }
-totalGamble
-daysWonOrLost
 function luckiest(){
 	for element in ${!winArray[@]}
 	do
@@ -86,4 +85,18 @@ function luck(){
                 fi
 	done
 }
+totalGamble
+daysWonOrLost
 luck
+function continueOrStop(){
+	while [ $totalAmount -ge $MONTHLY_STAKE ]
+		do
+			echo Continue Playing
+			totalAmount=0;
+			totalGamble
+			daysWonOrLost
+			luck
+		done
+			echo Stop Gambling
+}
+continueOrStop
