@@ -35,7 +35,6 @@ do
 		winArray[Day$i]=$(( $newAmount-$STAKE ))
 		else
 		lossArray[Day$i]=$(( $STAKE-$newAmount ))
-		amountLost=$(( $STAKE-$newAmount ))
 	fi
 
 done
