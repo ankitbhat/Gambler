@@ -1,14 +1,13 @@
 #!/bin/bash -x
 STAKE=100;
 BET=1;
-newAmount=100;
 declare -A winArray
 declare -A lossArray
 TOTAL_DAYS=20;
 MONTHLY_STAKE=2000;
 
 function gamble(){
-	read -p "Enter the betting limit for the day" limit
+	read -p "Enter the betting limit for the day: " limit
 	winLimit=$(( $STAKE+$limit ))
 	lossLimit=$(( $STAKE-$limit ))
 	newAmount=$STAKE
