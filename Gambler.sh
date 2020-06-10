@@ -1,46 +1,62 @@
 #!/bin/bash -x
-stake=100;
-bet=1;
+STAKE=100;
+BET=1;
 newAmount=100;
-declare -A win_array
-declare -A loss_array
-TotalAmount=0;
-for (( i=1;i<=20;i++ ))
-do
-	while [ $newAmount -lt 150 -a $newAmount -gt 50 ]
+declare -A winArray
+declare -A lossArray
+TOTAL_DAYS=20;
+MONTHLY_STAKE=2000;
+
+function gamble(){
+	read -p "Enter the betting limit for the day" limit
+	winLimit=$(( $STAKE+$limit ))
+	lossLimit=$(( $STAKE-$limit ))
+	newAmount=$STAKE
+
+	while [ $newAmount -lt $winLimit -a $newAmount -gt $lossLimit ]
 	do
-	random=$(( (($RANDOM%100))%2 ));
-	if [[ $random -eq 1 ]]
-		then
-		newAmount=$(( $newAmount+1 ));
-		echo Amount Left = $newAmount
-		else
-		newAmount=$(( $newAmount-1 )); 
-		echo Amount Left= $newAmount
-	fi
+		random=$(( (($RANDOM%100))%2 ));
+		if [[ $random -eq 1 ]]
+			then
+			newAmount=$(( $newAmount+$BET ));
+			echo Amount Left = $newAmount
+			else
+			newAmount=$(( $newAmount-$BET )); 
+			echo Amount Left= $newAmount
+		fi
 	done
-	TotalAmount=$(( $TotalAmount+$newAmount ))
-	if [ $newAmount -ge 100 ]
+}
+function totalGamble(){
+for (( i=1;i<=$TOTAL_DAYS;i++ ))
+do
+	gamble
+	totalAmount=$(( $totalAmount+$newAmount ))
+	if [ $newAmount -ge $STAKE ]
 		then
-		win_array[Day$i]="Won by $(( $newAmount-100 )) dollars"
+		winArray[Day$i]=$(( $newAmount-$STAKE ))
 		else
-		loss_array[Day$i]="Lost by $(( 100-$newAmount )) dollars"
-	fi 
-		newAmount=100;
+		lossArray[Day$i]=$(( $STAKE-$newAmount ))
+		amountLost=$(( $STAKE-$newAmount ))
+	fi
 
 done
-if [ $TotalAmount -gt 2000 ]
+if [ $totalAmount -gt $MONTHLY_STAKE ]
 	then
-	echo Total Amount Won = $(( $TotalAmount-2000 ))
+	echo Total Amount Won = $(( $totalAmount-$MONTHLY_STAKE ))
 	else
-	echo Total Amount Lost = $(( 2000-$TotalAmount ))
+	echo Total Amount Lost = $(( $MONTHLY_STAKE-$totalAmount ))
 fi
-for element in ${!win_array[@]}
+}
+function daysWonOrLost(){
+for element in ${!winArray[@]}
 do
-set +x
-echo $element "-" ${win_array[$element]}
+	set +x
+	echo $element "-  Won by " ${winArray[$element]} "dollars"
 done
-for element in ${!loss_array[@]}
+for element in ${!lossArray[@]}
 do
-echo $element "-" ${loss_array[$element]}
+	echo $element "-  Lost by " ${lossArray[$element]} "dollars"
 done
+}
+totalGamble
+daysWonOrLost
