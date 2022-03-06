@@ -17,10 +17,8 @@ function gamble(){
 		if [[ $random -eq 1 ]]
 			then
 			newAmount=$(( $newAmount+$BET ));
-			echo Amount Left = $newAmount
 			else
 			newAmount=$(( $newAmount-$BET )); 
-			echo Amount Left= $newAmount
 		fi
 	done
 }
