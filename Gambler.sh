@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 STAKE=100;
 BET=1;
 declare -A winArray
